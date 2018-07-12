@@ -74,70 +74,71 @@ class NewTask extends React.Component {
     }
 
 
-    return (<ApolloProvider client={client}>
+    return (
+      <ApolloProvider client={client}>
 
-      <Mutation mutation={ADD_PRODUCT}>
-        {
-          (createProduct, mutationResults) => {
-            const loading = mutationResults.loading && <p>loading...</p>;
+        <Mutation mutation={ADD_PRODUCT}>
+          {
+            (createProduct, mutationResults) => {
+              const loading = mutationResults.loading && <p>loading...</p>;
 
-            const error = mutationResults.error && <p>error creating new task</p>;
+              const error = mutationResults.error && <p>error creating new task</p>;
 
-            const success = mutationResults.data && (<p>
-              successfully created &nbsp; {mutationResults.data.productCreate.product.title}
-            </p>);
+              const success = mutationResults.data && (<p>
+                successfully created &nbsp; {mutationResults.data.productCreate.product.title}
+              </p>);
 
-            return (
-              <Card sectioned="sectioned">
-                <Form onSubmit={this.handleSubmit}>
-                  <FormLayout>
-                    <TextField
-                      value={title}
-                      onChange={this.handleChange('title')}
-                      label="Title"
-                      type="text"
-                    />
-                    <TextField
-                      value={description}
-                      onChange={this.handleChange('description')}
-                      label="Description"
-                      type="text"
-                    />
-                    <TextField
-                      value={tags}
-                      onChange={this.handleChange('tags')}
-                      label="Tags"
-                      type="text"
-                      helpText={
-                        <span>
-                          Separate with commas
+              return (
+                <Card sectioned="sectioned">
+                  <Form onSubmit={this.handleSubmit}>
+                    <FormLayout>
+                      <TextField
+                        value={title}
+                        onChange={this.handleChange('title')}
+                        label="Title"
+                        type="text"
+                      />
+                      <TextField
+                        value={description}
+                        onChange={this.handleChange('description')}
+                        label="Description"
+                        type="text"
+                      />
+                      <TextField
+                        value={tags}
+                        onChange={this.handleChange('tags')}
+                        label="Tags"
+                        type="text"
+                        helpText={
+                          <span>
+                            Separate with commas
                         </span>
-                      }
-                    />
-                    <TextField
-                      value={productType}
-                      onChange={this.handleChange('productType')}
-                      label="Priority"
-                      type="number"
-                      max={3}
-                      min={1}
-                      helpText={
-                        <span>
-                          3: high, 2:medium, 1:low
+                        }
+                      />
+                      <TextField
+                        value={productType}
+                        onChange={this.handleChange('productType')}
+                        label="Priority"
+                        type="number"
+                        max={3}
+                        min={1}
+                        helpText={
+                          <span>
+                            3: high, 2:medium, 1:low
                         </span>
-                      }
-                    />
+                        }
+                      />
 
-                    <Button onClick={() => mutate(createProduct)} submit>Submit</Button>
-                  </FormLayout>
-                </Form>
+                      <Button onClick={() => mutate(createProduct)} submit>Submit</Button>
+                    </FormLayout>
+                  </Form>
 
-              </Card>
-            )
+                </Card>
+              )
+            }
           }
-        }
-      </Mutation>
-    </ApolloProvider>);
+        </Mutation>
+      </ApolloProvider>);
 
   }
 }
