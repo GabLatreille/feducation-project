@@ -15,20 +15,14 @@ import {ApolloProvider, Mutation, Query} from 'react-apollo';
 import Loading from './Loading'
 
 const ALL_PRODUCTS = gql `
-query {
+query Products($reverse: Boolean){
   shop {
-    products(first: 50){
+    products(first: 50, sortKey:PRODUCT_TYPE, reverse:true){
       edges{
         node {
           id
           title
-          variants(first: 1){
-            edges{
-              node{
-                weight
-              }
-            }
-          }
+          productType
         }
       }
     }
@@ -61,13 +55,12 @@ export default function QueryByWeight() {
                     resourceName={{singular: 'task', plural: 'tasks'}}
                     items={tasks}
                     renderItem={(item) => {
-                      const {id, title} = item.node;
-                      const {weight} = item.node.variants.edges[0].node
+                      const {id, title, productType} = item.node;
 
                       let media = <Badge status="info">0</Badge>;
-                      if(weight==1) media = <Badge status="success">1</Badge>;
-                      else if(weight==2) media = <Badge status="attention">2</Badge>;
-                      else if(weight==3) media = <Badge status="warning">3</Badge>;
+                      if(productType==1) media = <Badge status="success">1</Badge>;
+                      else if(productType==2) media = <Badge status="attention">2</Badge>;
+                      else if(productType==3) media = <Badge status="warning">3</Badge>;
 
                       return (<ResourceList.Item id={id} media={media} accessibilityLabel={`View details for ${title}`}>
                         <h3><TextStyle variation="strong">{title}</TextStyle></h3>

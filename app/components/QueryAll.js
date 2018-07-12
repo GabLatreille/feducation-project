@@ -23,13 +23,7 @@ query {
           title
           description
           tags
-          variants(first: 1){
-            edges{
-              node{
-                weight
-              }
-            }
-          }
+          productType
         }
       }
     }
@@ -42,6 +36,10 @@ const client = new ApolloClient({
     credentials: 'include'
   }
 });
+
+function mutate(){
+  console.log("ON CLICK");
+}
 
 export default function QueryAll() {
   return (
@@ -62,19 +60,24 @@ export default function QueryAll() {
                     resourceName={{singular: 'task', plural: 'tasks'}}
                     items={tasks}
                     renderItem={(item) => {
-                      const {id, title, description, tags} = item.node;
-                      const {weight} = item.node.variants.edges[0].node
+                      const {id, title, description, tags, productType} = item.node;
 
                       let media = <Badge status="info">0</Badge>;
-                      if(weight==1) media = <Badge status="success">1</Badge>;
-                      else if(weight==2) media = <Badge status="attention">2</Badge>;
-                      else if(weight==3) media = <Badge status="warning">3</Badge>;
+                      if(productType==1) media = <Badge status="success">1</Badge>;
+                      else if(productType==2) media = <Badge status="attention">2</Badge>;
+                      else if(productType==3) media = <Badge status="warning">3</Badge>;
 
-                      return (<ResourceList.Item id={id} media={media} accessibilityLabel={`View details for ${title}`}>
-                        <h3><TextStyle variation="strong">{title}</TextStyle></h3>
-                        <h5>{description}</h5>
-                        <p>{tags}</p>
-                      </ResourceList.Item>);
+                      return (
+                        <ResourceList.Item
+                          id={id}
+                          media={media}
+                          accessibilityLabel={`View details for ${title}`}
+                        >
+                          <h3><TextStyle variation="strong">{title}</TextStyle></h3>
+                          <h5>{description}</h5>
+                          <p>{tags}</p>
+                        </ResourceList.Item>
+                      );
                     }
                   }
                   />
