@@ -11,8 +11,8 @@ export default function Loading() {
     <div>
       <Card sectioned="sectioned">
         <TextContainer>
-          <SkeletonDisplayText size="small"/>
-          <SkeletonBodyText/>
+          <SkeletonDisplayText size="small" />
+          <SkeletonBodyText />
         </TextContainer>
       </Card>
     </div>

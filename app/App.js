@@ -1,9 +1,9 @@
 import React from 'react';
-import {Page, AppProvider} from '@shopify/polaris';
+import { Page, AppProvider } from '@shopify/polaris';
 import ApolloClient from 'apollo-boost';
-import {Switch, Route, withRouter} from 'react-router';
+import { Switch, Route, withRouter } from 'react-router';
 import RoutePropagator from '@shopify/react-shopify-app-route-propagator';
-import {Delete, Weight, All, New} from './routes'
+import { Delete, Weight, All, New } from './routes'
 
 const client = new ApolloClient({
   fetchOptions: {
@@ -13,15 +13,15 @@ const client = new ApolloClient({
 
 const Propagator = withRouter(RoutePropagator);
 
-export default function() {
+export default function () {
   return (
     <AppProvider>
       <div>
-        <link rel="stylesheet" href="https://sdks.shopifycdn.com/polaris/2.2.0/polaris.min.css"/>
+        <link rel="stylesheet" href="https://sdks.shopifycdn.com/polaris/2.2.0/polaris.min.css" />
         <Page
           title="Task Organizer"
-          secondaryActions={[{content: 'ALL', url: '/'}, {content: 'Weight', url: '/weight'}, {content: 'New', url: '/new'}]}
-          >
+          secondaryActions={[{ content: 'ALL', url: '/' }, { content: 'Weight', url: '/weight' }, { content: 'New', url: '/new' }]}
+        >
           <React.Fragment>
             <Propagator />
             <Switch>

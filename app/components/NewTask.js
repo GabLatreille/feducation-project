@@ -1,6 +1,6 @@
 import React from 'react';
-import ApolloClient, {gql} from 'apollo-boost';
-import {ApolloProvider, Mutation, Query} from 'react-apollo';
+import ApolloClient, { gql } from 'apollo-boost';
+import { ApolloProvider, Mutation, Query } from 'react-apollo';
 import {
   Form,
   FormLayout,
@@ -33,21 +33,21 @@ const client = new ApolloClient({
 
 class NewTask extends React.Component {
   state = {
-    title: '' ,
+    title: '',
     description: '',
     tags: '',
     productType: ''
   };
 
   handleChange = (field) => {
-      return (value) => this.setState({[field]: value});
-    };
+    return (value) => this.setState({ [field]: value });
+  };
 
   handleSubmit = (event) => {
     console.log(this.title);
     this.setState(
       {
-        title: '' ,
+        title: '',
         description: '',
         tags: '',
         productType: ''
@@ -57,7 +57,7 @@ class NewTask extends React.Component {
 
   render() {
 
-    const {title, description, tags, productType} = this.state;
+    const { title, description, tags, productType } = this.state;
 
     function mutate(createProduct) {
       const productInput = {
@@ -68,10 +68,9 @@ class NewTask extends React.Component {
       };
 
       createProduct({
-        variables: {product: productInput},
+        variables: { product: productInput },
       });
 
-      console.log("YUP");
     }
 
 

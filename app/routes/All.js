@@ -1,5 +1,5 @@
 import React from 'react';
-import {DisplayText} from '@shopify/polaris';
+import { DisplayText } from '@shopify/polaris';
 import QueryAll from '../components/QueryAll'
 
 export default function All() {
