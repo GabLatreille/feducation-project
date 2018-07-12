@@ -1,5 +1,4 @@
 import React from 'react';
-import Fetch from 'react-fetch-component';
 import {
   AppProvider,
   Page,
@@ -50,27 +49,10 @@ const client = new ApolloClient({
 });
 
 class QueryAll extends React.Component {
-  state = {
-    id: ''
-  };
-
-  handleChange = (field) => {
-    return (value) => this.setState({ [field]: value });
-  };
-
-  handleSubmit = (event) => {
-    this.setState(
-      {
-        id: ''
-      }
-    );
-  };
 
   render() {
-    const { id } = this.state;
 
     function mutate(productDelete, id) {
-      console.log(" on click " + id);
       const productInput = {
         id: id,
       };
@@ -78,6 +60,8 @@ class QueryAll extends React.Component {
       productDelete({
         variables: { input: productInput },
       });
+
+      window.location.reload();
 
     }
 
@@ -91,13 +75,11 @@ class QueryAll extends React.Component {
                   if (loading) return <Loading />;
                   if (error) return `Error! ${error.message}`;
 
-                  const tasks = data.shop.products.edges;
-
                   return (
                     <Card>
                       <ResourceList
                         resourceName={{ singular: 'task', plural: 'tasks' }}
-                        items={tasks}
+                        items={data.shop.products.edges}
                         renderItem={(item) => {
                           const { id, title, description, tags, productType } = item.node;
                           console.log(id)
@@ -129,7 +111,6 @@ class QueryAll extends React.Component {
                         }
                         }
                       />
-
                     </Card>
                   );
                 }
