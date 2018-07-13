@@ -29,6 +29,7 @@ query Products($reverse: Boolean){
 }
 `;
 
+
 const client = new ApolloClient({
   fetchOptions: {
     credentials: 'include'
@@ -37,23 +38,24 @@ const client = new ApolloClient({
 
 class QueryByWeight extends React.Component {
   state = {
-    reverse: false
+    reverse: true
   }
 
-  reverseState = ()=>{
+  reverseState = () => {
     this.state.reverse = !this.state.reverse
-    console.log(!this.state.reverse+">>"+this.state.reverse)
   }
 
   render() {
 
-    let {reverse} = this.state
+    let { reverse } = this.state
 
     return (
       <AppProvider>
         <Page>
+
           <ApolloProvider client={client}>
-            <Query query={ALL_PRODUCTS} variables={{reverse}}>
+
+            <Query query={ALL_PRODUCTS} variables={{ reverse }} refetch>
               {
                 ({ loading, error, data }) => {
                   if (loading) return <Loading />;
@@ -65,7 +67,7 @@ class QueryByWeight extends React.Component {
                     <div>
                       <Button onClick={() => {
                         this.reverseState();
-                        }} submit>Reverse List</Button>
+                      }} submit>Reverse List</Button>
                       <Card>
                         <ResourceList
                           resourceName={{ singular: 'task', plural: 'tasks' }}
