@@ -1,16 +1,9 @@
 import React from 'react';
-import { AppProvider, DisplayText} from '@shopify/polaris';
+import { AppProvider, DisplayText } from '@shopify/polaris';
 import { ApolloProvider, Query } from 'react-apollo';
-import ApolloClient, { gql } from 'apollo-boost';
-
-const SHOP_QUERY = gql`
-{
-    shop{
-        name
-        description
-    }
-}
-`;
+import ApolloClient from 'apollo-boost';
+import { ShopQuery } from '../Queries'
+import { HomeLoading } from '../components'
 
 const client = new ApolloClient({
     fetchOptions: {
@@ -18,25 +11,24 @@ const client = new ApolloClient({
     },
 });
 
-
-
 export default function Home() {
     return (
         <AppProvider>
             <ApolloProvider client={client}>
-                <Query query={SHOP_QUERY}>
+                <Query query={ShopQuery}>
                     {
-                        ({ loading, error, data }) => {
-                            if (loading) return "loading ...";
-                            if (error) return `Error! ${error.message}`;
-                            console.log(data.shop)
+                        ({ loading, data }) => {
+                            if (loading) return <HomeLoading />
 
-                            return (
-                                <div>
-                                    <DisplayText size="extraLarge">Welcome to {data.shop.name}!</DisplayText>
-                                    <DisplayText size="medium">{data.shop.description}</DisplayText>
-                                </div>
-                            )
+                            if (data.shop) {
+                                const { name, description } = data.shop;
+                                return (
+                                    <div>
+                                        <DisplayText size="extraLarge">Welcome to {name}!</DisplayText>
+                                        <DisplayText size="medium">{description}</DisplayText>
+                                    </div>
+                                )
+                            }
                         }
                     }
 

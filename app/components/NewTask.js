@@ -1,6 +1,6 @@
 import React from 'react';
-import ApolloClient, { gql } from 'apollo-boost';
-import { ApolloProvider, Mutation, Query } from 'react-apollo';
+import ApolloClient from 'apollo-boost';
+import { ApolloProvider, Mutation } from 'react-apollo';
 import {
   Form,
   FormLayout,
@@ -8,22 +8,7 @@ import {
   TextField,
   Button
 } from '@shopify/polaris';
-
-const ADD_PRODUCT = gql`
-  mutation productCreate($product: ProductInput!) {
-    productCreate(input: $product) {
-      product {
-        id
-        title
-        descriptionHtml
-        tags
-        productType
-      }
-    }
-  }
-`;
-
-
+import { ProductCreateMutation } from '../queries'
 
 const client = new ApolloClient({
   fetchOptions: {
@@ -44,7 +29,6 @@ class NewTask extends React.Component {
   };
 
   handleSubmit = (event) => {
-    console.log(this.title);
     this.setState(
       {
         title: '',
@@ -77,17 +61,9 @@ class NewTask extends React.Component {
     return (
       <ApolloProvider client={client}>
 
-        <Mutation mutation={ADD_PRODUCT}>
+        <Mutation mutation={ProductCreateMutation}>
           {
-            (createProduct, mutationResults) => {
-              const loading = mutationResults.loading && <p>loading...</p>;
-
-              const error = mutationResults.error && <p>error creating new task</p>;
-
-              const success = mutationResults.data && (<p>
-                successfully created &nbsp; {mutationResults.data.productCreate.product.title}
-              </p>);
-
+            (createProduct) => {
               return (
                 <Card sectioned="sectioned">
                   <Form onSubmit={this.handleSubmit}>
@@ -112,7 +88,7 @@ class NewTask extends React.Component {
                         helpText={
                           <span>
                             Separate with commas
-                        </span>
+                          </span>
                         }
                       />
                       <TextField
@@ -125,7 +101,7 @@ class NewTask extends React.Component {
                         helpText={
                           <span>
                             3: high, 2:medium, 1:low
-                        </span>
+                          </span>
                         }
                       />
 

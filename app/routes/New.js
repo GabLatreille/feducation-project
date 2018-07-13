@@ -1,6 +1,6 @@
 import React from 'react';
 import { DisplayText } from '@shopify/polaris';
-import NewTask from '../components/NewTask'
+import { NewTask } from '../components'
 
 export default function New() {
   return (

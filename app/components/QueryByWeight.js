@@ -9,26 +9,10 @@ import {
   Badge,
 } from '@shopify/polaris';
 
-import ApolloClient, { gql } from 'apollo-boost';
+import ApolloClient from 'apollo-boost';
 import { ApolloProvider, Query } from 'react-apollo';
 import Loading from './Loading'
-
-const ALL_PRODUCTS = gql`
-query Products($reverse: Boolean){
-  shop {
-    products(first: 50, sortKey:PRODUCT_TYPE, reverse:$reverse){
-      edges{
-        node {
-          id
-          title
-          productType
-        }
-      }
-    }
-  }
-}
-`;
-
+import { PriorityQuery } from '../queries'
 
 const client = new ApolloClient({
   fetchOptions: {
@@ -55,13 +39,10 @@ class QueryByWeight extends React.Component {
 
           <ApolloProvider client={client}>
 
-            <Query query={ALL_PRODUCTS} variables={{ reverse }} refetch>
+            <Query query={PriorityQuery} variables={{ reverse }} refetch>
               {
-                ({ loading, error, data }) => {
+                ({ loading, data }) => {
                   if (loading) return <Loading />;
-                  if (error) return `Error! ${error.message}`;
-
-                  const tasks = data.shop.products.edges;
 
                   return (
                     <div>
@@ -71,7 +52,7 @@ class QueryByWeight extends React.Component {
                       <Card>
                         <ResourceList
                           resourceName={{ singular: 'task', plural: 'tasks' }}
-                          items={tasks}
+                          items={data.shop.products.edges}
                           renderItem={(item) => {
                             const { id, title, productType } = item.node;
 

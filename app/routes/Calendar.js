@@ -1,8 +1,6 @@
 import React from 'react';
 import { DisplayText } from '@shopify/polaris';
-import HolidayCalendar from '../components/HolidayCalendar'
-
-
+import { HolidayCalendar } from '../components'
 
 export default function Calendar() {
   return (

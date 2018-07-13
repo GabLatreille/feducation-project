@@ -8,39 +8,10 @@ import {
   TextStyle,
   Badge,
 } from '@shopify/polaris';
-import ApolloClient, { gql } from 'apollo-boost';
+import ApolloClient from 'apollo-boost';
 import { ApolloProvider, Mutation, Query } from 'react-apollo';
 import Loading from './Loading'
-
-const ALL_PRODUCTS = gql`
-query {
-  shop {
-    products(first: 50){
-      edges{
-        node {
-          id
-          title
-          description
-          tags
-          productType
-        }
-      }
-    }
-  }
-}
-`;
-
-const DELETE_PRODUCT = gql`
-  mutation productDelete($input: ProductDeleteInput!) {
-    productDelete(input: $input) {
-      deletedProductId
-      shop {
-        id
-      }
-    }
-  }
-`;
-
+import { AllProductQuery, ProductDeleteMutation } from '../queries'
 
 const client = new ApolloClient({
   fetchOptions: {
@@ -69,11 +40,10 @@ class QueryAll extends React.Component {
       <AppProvider>
         <Page>
           <ApolloProvider client={client}>
-            <Query query={ALL_PRODUCTS}>
+            <Query query={AllProductQuery}>
               {
-                ({ loading, error, data }) => {
+                ({ loading, data }) => {
                   if (loading) return <Loading />;
-                  if (error) return `Error! ${error.message}`;
 
                   return (
                     <Card>
@@ -82,7 +52,6 @@ class QueryAll extends React.Component {
                         items={data.shop.products.edges}
                         renderItem={(item) => {
                           const { id, title, description, tags, productType } = item.node;
-                          console.log(id)
 
                           let media = <Badge status="info">0</Badge>;
                           if (productType == 1) media = <Badge status="success">1</Badge>;
@@ -97,7 +66,7 @@ class QueryAll extends React.Component {
                               <h3><TextStyle variation="strong">{title}</TextStyle></h3>
                               <h5>{description}</h5>
                               <p>{tags}</p>
-                              <Mutation mutation={DELETE_PRODUCT}>
+                              <Mutation mutation={ProductDeleteMutation}>
                                 {
                                   (productDelete) => {
                                     return (

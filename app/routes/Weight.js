@@ -1,6 +1,6 @@
 import React from 'react';
 import { DisplayText } from '@shopify/polaris';
-import QueryByWeight from '../components/QueryByWeight'
+import { QueryByWeight } from '../components'
 
 export default function High() {
   return (
