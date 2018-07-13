@@ -1,5 +1,4 @@
 import React from 'react';
-import Fetch from 'react-fetch-component';
 import {
   AppProvider,
   Page,
@@ -11,13 +10,13 @@ import {
 } from '@shopify/polaris';
 
 import ApolloClient, { gql } from 'apollo-boost';
-import { ApolloProvider, Mutation, Query } from 'react-apollo';
+import { ApolloProvider, Query } from 'react-apollo';
 import Loading from './Loading'
 
 const ALL_PRODUCTS = gql`
 query Products($reverse: Boolean){
   shop {
-    products(first: 50, sortKey:PRODUCT_TYPE, reverse:true){
+    products(first: 50, sortKey:PRODUCT_TYPE, reverse:$reverse){
       edges{
         node {
           id
@@ -36,45 +35,66 @@ const client = new ApolloClient({
   }
 });
 
-export default function QueryByWeight() {
-  return (
-    <AppProvider>
-      <Page>
-        <ApolloProvider client={client}>
-          <Query query={ALL_PRODUCTS}>
-            {
-              ({ loading, error, data }) => {
-                if (loading) return <Loading />;
-                if (error) return `Error! ${error.message}`;
+class QueryByWeight extends React.Component {
+  state = {
+    reverse: false
+  }
 
-                const tasks = data.shop.products.edges;
+  reverseState = ()=>{
+    this.state.reverse = !this.state.reverse
+    console.log(!this.state.reverse+">>"+this.state.reverse)
+  }
 
-                return (
-                  <Card>
-                    <ResourceList
-                      resourceName={{ singular: 'task', plural: 'tasks' }}
-                      items={tasks}
-                      renderItem={(item) => {
-                        const { id, title, productType } = item.node;
+  render() {
 
-                        let media = <Badge status="info">0</Badge>;
-                        if (productType == 1) media = <Badge status="success">1</Badge>;
-                        else if (productType == 2) media = <Badge status="attention">2</Badge>;
-                        else if (productType == 3) media = <Badge status="warning">3</Badge>;
+    let {reverse} = this.state
 
-                        return (<ResourceList.Item id={id} media={media} accessibilityLabel={`View details for ${title}`}>
-                          <h3><TextStyle variation="strong">{title}</TextStyle></h3>
-                        </ResourceList.Item>);
-                      }
-                      }
-                    />
-                  </Card>
-                );
+    return (
+      <AppProvider>
+        <Page>
+          <ApolloProvider client={client}>
+            <Query query={ALL_PRODUCTS} variables={{reverse}}>
+              {
+                ({ loading, error, data }) => {
+                  if (loading) return <Loading />;
+                  if (error) return `Error! ${error.message}`;
+
+                  const tasks = data.shop.products.edges;
+
+                  return (
+                    <div>
+                      <Button onClick={() => {
+                        this.reverseState();
+                        }} submit>Reverse List</Button>
+                      <Card>
+                        <ResourceList
+                          resourceName={{ singular: 'task', plural: 'tasks' }}
+                          items={tasks}
+                          renderItem={(item) => {
+                            const { id, title, productType } = item.node;
+
+                            let media = <Badge status="info">0</Badge>;
+                            if (productType == 1) media = <Badge status="success">1</Badge>;
+                            else if (productType == 2) media = <Badge status="attention">2</Badge>;
+                            else if (productType == 3) media = <Badge status="warning">3</Badge>;
+
+                            return (<ResourceList.Item id={id} media={media} accessibilityLabel={`View details for ${title}`}>
+                              <h3><TextStyle variation="strong">{title}</TextStyle></h3>
+                            </ResourceList.Item>);
+                          }
+                          }
+                        />
+                      </Card>
+                    </div>
+                  );
+                }
               }
-            }
-          </Query>
+            </Query>
 
-        </ApolloProvider>
-      </Page>
-    </AppProvider>)
+          </ApolloProvider>
+        </Page>
+      </AppProvider>)
+  }
 }
+
+export default QueryByWeight;
